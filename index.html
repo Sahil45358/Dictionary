@@ -13,6 +13,17 @@
       <button id="darkToggle" onclick="toggleDarkMode()">🌙</button>
     </div>
     <p class="subtitle">Describe a concept or feeling to find related words.</p>
+    <div class="mode-toggle">
+  <label>
+    <input type="radio" name="mode" value="reverse" checked onchange="setMode('reverse')" />
+    Reverse Dictionary
+  </label>
+  <label>
+    <input type="radio" name="mode" value="dictionary" onchange="setMode('dictionary')" />
+    Dictionary Lookup
+  </label>
+</div>
+
     <textarea id="description" placeholder="e.g., longing for a distant home..."></textarea>
     <div class="button-group">
       <button onclick="findWords()">Find Words</button>
