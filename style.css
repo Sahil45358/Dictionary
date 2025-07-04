@@ -142,3 +142,21 @@ body.dark .collapsible-header {
 #toggleIcon {
   font-size: 18px;
 }
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.filter-row label {
+  font-weight: bold;
+}
+
+.filter-row select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
