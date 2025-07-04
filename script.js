@@ -151,7 +151,7 @@ updateHistory();
 updateFavorites();
 
 function translateWord(word, lang, card) {
-  fetch("https://libretranslate.com/translate", {
+  fetch("https://translate.argosopentech.com/translate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -168,5 +168,10 @@ function translateWord(word, lang, card) {
     translationNode.innerHTML = `<small><strong>Translated:</strong> ${translated}</small>`;
     card.appendChild(translationNode);
   })
-  .catch(() => {});
+  .catch(() => {
+    const fallback = document.createElement("div");
+    fallback.innerHTML = `<small style="color: #999;">Translation unavailable</small>`;
+    card.appendChild(fallback);
+  });
 }
+
