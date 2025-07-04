@@ -8,10 +8,14 @@
 </head>
 <body>
   <div class="container">
-    <h1>Reverse Dictionary</h1>
-    <p>Describe a feeling, idea, or concept, and get word suggestions.</p>
-    <textarea id="description" placeholder="e.g., the feeling of comfort in a storm..."></textarea>
-    <button onclick="findWords()">Find Words</button>
+    <h1>🔄 Reverse Dictionary</h1>
+    <p class="subtitle">Describe a concept, feeling, or idea, and discover matching words.</p>
+    <textarea id="description" placeholder="e.g., longing for a distant home..."></textarea>
+    <div class="button-group">
+      <button onclick="findWords()">Find Words</button>
+      <button onclick="clearInput()">Clear</button>
+    </div>
+    <div id="loading" class="hidden">🔍 Searching...</div>
     <div id="results"></div>
   </div>
   <script src="script.js"></script>
