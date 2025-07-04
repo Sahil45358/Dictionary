@@ -117,3 +117,28 @@ form button {
   width: fit-content;
   align-self: flex-start;
 }
+.collapsible-section {
+  margin-top: 2rem;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: #e9ecef;
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+body.dark .collapsible-header {
+  background: #333;
+}
+
+#history.collapsed {
+  display: none;
+}
+
+#toggleIcon {
+  font-size: 18px;
+}
