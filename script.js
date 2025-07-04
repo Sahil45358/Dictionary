@@ -4,10 +4,14 @@ let favoriteList = JSON.parse(localStorage.getItem('favorites')) || [];
 
 function findWords() {
   const input = document.getElementById('description').value.trim();
+  const pos = document.getElementById('partOfSpeech').value;
+  const rel = document.getElementById('relationship').value || 'ml';
+  const translateTo = document.getElementById('translateTo').value;
+
   const output = document.getElementById('results');
   const loading = document.getElementById('loading');
-
   output.innerHTML = "";
+
   if (!input) {
     output.innerHTML = "<p>Please enter a description above.</p>";
     return;
@@ -20,8 +24,10 @@ function findWords() {
     updateHistory();
   }
 
-  // Use Datamuse to find related words
-  fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(input)}`)
+  const baseURL = `https://api.datamuse.com/words?${rel}=${encodeURIComponent(input)}`;
+  const query = pos ? `${baseURL}&topics=${pos}` : baseURL;
+
+  fetch(query)
     .then(res => res.json())
     .then(words => {
       loading.classList.add('hidden');
@@ -41,6 +47,10 @@ function findWords() {
         `;
         output.appendChild(card);
         fetchDefinition(word);
+
+        if (translateTo) {
+          translateWord(word, translateTo, card);
+        }
       });
     })
     .catch(() => {
@@ -48,6 +58,7 @@ function findWords() {
       output.innerHTML = `<div class="result-card">Error loading suggestions.</div>`;
     });
 }
+
 
 function fetchDefinition(word) {
   fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
@@ -138,3 +149,24 @@ function toggleHistory() {
 }
 updateHistory();
 updateFavorites();
+
+function translateWord(word, lang, card) {
+  fetch("https://libretranslate.com/translate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      q: word,
+      source: "en",
+      target: lang,
+      format: "text"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const translated = data.translatedText;
+    const translationNode = document.createElement("div");
+    translationNode.innerHTML = `<small><strong>Translated:</strong> ${translated}</small>`;
+    card.appendChild(translationNode);
+  })
+  .catch(() => {});
+}
