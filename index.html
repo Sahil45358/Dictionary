@@ -8,8 +8,11 @@
 </head>
 <body>
   <div class="container">
-    <h1>🔄 Reverse Dictionary</h1>
-    <p class="subtitle">Describe a concept, feeling, or idea, and discover matching words.</p>
+    <div class="top-bar">
+      <h1>🔄 Reverse Dictionary</h1>
+      <button id="darkToggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+    <p class="subtitle">Describe a concept or feeling to find related words.</p>
     <textarea id="description" placeholder="e.g., longing for a distant home..."></textarea>
     <div class="button-group">
       <button onclick="findWords()">Find Words</button>
@@ -17,6 +20,20 @@
     </div>
     <div id="loading" class="hidden">🔍 Searching...</div>
     <div id="results"></div>
+
+    <h3>📜 Search History</h3>
+    <ul id="history"></ul>
+
+    <h3>❤️ Favorites</h3>
+    <ul id="favorites"></ul>
+
+    <h3>✍️ Submit Your Word</h3>
+    <form id="submitForm" onsubmit="submitWord(event)">
+      <input type="text" id="userWord" placeholder="Your word suggestion..." required />
+      <input type="text" id="userDescription" placeholder="Description or meaning..." required />
+      <button type="submit">Submit</button>
+    </form>
+    <p id="submissionStatus"></p>
   </div>
   <script src="script.js"></script>
 </body>
