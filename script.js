@@ -64,15 +64,28 @@ function fetchDefinition(word) {
   fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
     .then(res => res.json())
     .then(data => {
-      const def = data[0]?.meanings[0]?.definitions[0]?.definition || "No definition found.";
+      const firstEntry = data[0];
+      const meaning = firstEntry?.meanings?.[0];
+      const definition = meaning?.definitions?.[0]?.definition || "Definition not found.";
+      const partOfSpeech = meaning?.partOfSpeech || "—";
+
       const cards = document.querySelectorAll(".result-card");
       cards.forEach(card => {
         if (card.innerHTML.includes(`<strong>${word}</strong>`)) {
-          card.querySelector("em").textContent = def;
+          card.querySelector("em").innerHTML = `<strong>${partOfSpeech}</strong>: ${definition}`;
+        }
+      });
+    })
+    .catch(() => {
+      const cards = document.querySelectorAll(".result-card");
+      cards.forEach(card => {
+        if (card.innerHTML.includes(`<strong>${word}</strong>`)) {
+          card.querySelector("em").textContent = "No definition found.";
         }
       });
     });
 }
+
 
 function clearInput() {
   document.getElementById('description').value = "";
