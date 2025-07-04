@@ -1,4 +1,5 @@
-let historyList = [];
+let historyList = JSON.parse(localStorage.getItem("history")) || [];
+
 let favoriteList = JSON.parse(localStorage.getItem('favorites')) || [];
 
 function findWords() {
@@ -79,6 +80,8 @@ function updateHistory() {
     };
     list.appendChild(li);
   });
+  localStorage.setItem("history", JSON.stringify(historyList));
+
 }
 
 function toggleDarkMode() {
