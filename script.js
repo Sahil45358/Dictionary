@@ -19,27 +19,33 @@ function findWords() {
     updateHistory();
   }
 
-  setTimeout(() => {
-    loading.classList.add('hidden');
+  // Use Datamuse to find related words
+  fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(input)}`)
+    .then(res => res.json())
+    .then(words => {
+      loading.classList.add('hidden');
+      if (!words.length) {
+        output.innerHTML = `<div class="result-card">No suggestions found. Try rephrasing.</div>`;
+        return;
+      }
 
-    fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(input)}`)
-      .then(res => res.json())
-      .then(words => {
-        if (!words.length) {
-          output.innerHTML = `<div class="result-card">No suggestions found. Try rephrasing.</div>`;
-          return;
-        }
-
-        words.slice(0, 10).forEach(wordObj => {
-          const word = wordObj.word;
-          const card = document.createElement("div");
-          card.className = "result-card";
-          card.innerHTML = `<strong>${word}</strong><br><em>Loading definition...</em><span class="fav" onclick="toggleFavorite('${word}')">❤️</span>`;
-          output.appendChild(card);
-          fetchDefinition(word);
-        });
+      words.slice(0, 10).forEach(wordObj => {
+        const word = wordObj.word;
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.innerHTML = `
+          <strong>${word}</strong><br>
+          <em>Loading definition...</em>
+          <span class="fav" onclick="toggleFavorite('${word}')">❤️</span>
+        `;
+        output.appendChild(card);
+        fetchDefinition(word);
       });
-  }, 500);
+    })
+    .catch(() => {
+      loading.classList.add('hidden');
+      output.innerHTML = `<div class="result-card">Error loading suggestions.</div>`;
+    });
 }
 
 function fetchDefinition(word) {
@@ -76,8 +82,11 @@ function updateHistory() {
 }
 
 function toggleDarkMode() {
-  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.toggle("dark");
+  const button = document.getElementById("darkToggle");
+  button.textContent = isDark ? "☀️" : "🌙";
 }
+
 
 function toggleFavorite(word) {
   if (favoriteList.includes(word)) {
