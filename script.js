@@ -1,34 +1,47 @@
 function findWords() {
-  const description = document.getElementById('description').value.trim().toLowerCase();
+  const input = document.getElementById('description').value.trim().toLowerCase();
   const output = document.getElementById('results');
+  const loading = document.getElementById('loading');
 
-  if (!description) {
-    output.innerHTML = "<p>Please enter a description.</p>";
+  output.innerHTML = "";
+  if (!input) {
+    output.innerHTML = "<p>Please enter a description above.</p>";
     return;
   }
 
-  const mockDatabase = {
-    "comfort in a storm": ["serenity", "resilience", "sanctuary"],
-    "beauty in sadness": ["melancholy", "bittersweet", "elegy"],
-    "fear of being forgotten": ["oblivion", "limerence", "athanasy"],
-    "longing for a distant place": ["wanderlust", "saudade", "fernweh"],
-  };
+  loading.classList.remove('hidden');
 
-  let matches = [];
+  setTimeout(() => {
+    loading.classList.add('hidden');
 
-  for (let key in mockDatabase) {
-    if (description.includes(key)) {
-      matches = mockDatabase[key];
-      break;
+    const database = {
+      "comfort": ["serenity", "resilience", "sanctuary"],
+      "sadness": ["melancholy", "bittersweet", "elegy"],
+      "forgotten": ["oblivion", "limerence", "athanasy"],
+      "longing": ["wanderlust", "saudade", "fernweh"],
+      "peace": ["tranquility", "calm", "nirvana"],
+      "fear": ["anxiety", "trepidation", "angst"]
+    };
+
+    let matches = [];
+
+    Object.entries(database).forEach(([keyword, words]) => {
+      if (input.includes(keyword)) {
+        matches.push(...words);
+      }
+    });
+
+    if (matches.length === 0) {
+      output.innerHTML = `<div class="result-card">No strong matches found. Try rephrasing or using simpler terms.</div>`;
+    } else {
+      output.innerHTML = matches
+        .map(word => `<div class="result-card">${word}</div>`)
+        .join('');
     }
-  }
+  }, 800);
+}
 
-  if (matches.length === 0) {
-    matches = ["No exact match found. Try rephrasing your description."];
-  }
-
-  output.innerHTML = `
-    <h3>Suggested Words:</h3>
-    <ul>${matches.map(word => `<li>${word}</li>`).join('')}</ul>
-  `;
+function clearInput() {
+  document.getElementById('description').value = "";
+  document.getElementById('results').innerHTML = "";
 }
