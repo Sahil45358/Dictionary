@@ -128,3 +128,9 @@ function submitWord(event) {
 }
 
 updateFavorites();
+function toggleHistory() {
+  const historyList = document.getElementById("history");
+  const icon = document.getElementById("toggleIcon");
+  const isCollapsed = historyList.classList.toggle("collapsed");
+  icon.textContent = isCollapsed ? "▼" : "▲";
+}
