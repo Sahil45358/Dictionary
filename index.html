@@ -21,9 +21,14 @@
     <div id="loading" class="hidden">🔍 Searching...</div>
     <div id="results"></div>
 
+<div class="collapsible-section">
+  <div class="collapsible-header" onclick="toggleHistory()">
     <h3>📜 Search History</h3>
-    <ul id="history"></ul>
-
+    <span id="toggleIcon">▼</span>
+  </div>
+  <ul id="history" class="collapsed"></ul>
+</div>
+    
     <h3>❤️ Favorites</h3>
     <ul id="favorites"></ul>
 
