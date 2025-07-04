@@ -21,6 +21,34 @@
     <div id="loading" class="hidden">🔍 Searching...</div>
     <div id="results"></div>
 
+<div class="filter-row">
+  <label for="partOfSpeech">Part of Speech:</label>
+  <select id="partOfSpeech">
+    <option value="">All</option>
+    <option value="n">Noun</option>
+    <option value="v">Verb</option>
+    <option value="adj">Adjective</option>
+    <option value="adv">Adverb</option>
+  </select>
+
+  <label for="relationship">Type:</label>
+  <select id="relationship">
+    <option value="ml">Similar meaning</option>
+    <option value="rel_syn">Synonym</option>
+    <option value="rel_ant">Antonym</option>
+  </select>
+
+  <label for="translateTo">Translate to:</label>
+  <select id="translateTo">
+    <option value="">None</option>
+    <option value="es">Spanish</option>
+    <option value="fr">French</option>
+    <option value="de">German</option>
+    <option value="hi">Hindi</option>
+  </select>
+</div>
+
+    
 <div class="collapsible-section">
   <div class="collapsible-header" onclick="toggleHistory()">
     <h3>📜 Search History</h3>
