@@ -1,3 +1,5 @@
+let currentMode = 'reverse';
+
 let historyList = JSON.parse(localStorage.getItem("history")) || [];
 
 let favoriteList = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -10,13 +12,16 @@ function findWords() {
 
   const output = document.getElementById('results');
   const loading = document.getElementById('loading');
+  
   output.innerHTML = "";
-
   if (!input) {
-    output.innerHTML = "<p>Please enter a description above.</p>";
+    output.innerHTML = "<p>Please enter something above.</p>";
     return;
   }
 
+  if (currentMode === 'dictionary') {
+    return lookupWord(input);
+  }
   loading.classList.remove('hidden');
 
   if (!historyList.includes(input)) {
@@ -188,3 +193,55 @@ function translateWord(word, lang, card) {
   });
 }
 
+function setMode(mode) {
+  currentMode = mode;
+  const placeholder = mode === 'dictionary'
+    ? "Enter a single word to look up..."
+    : "Describe a concept or feeling...";
+  document.getElementById("description").placeholder = placeholder;
+  clearInput();
+}
+
+function lookupWord(word) {
+  const output = document.getElementById('results');
+  const loading = document.getElementById('loading');
+  loading.classList.remove('hidden');
+
+  fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+    .then(res => res.json())
+    .then(data => {
+      loading.classList.add('hidden');
+
+      if (!data || data.title === "No Definitions Found") {
+        output.innerHTML = `<div class="result-card">No definition found.</div>`;
+        return;
+      }
+
+      const entry = data[0];
+      const phonetics = entry.phonetics?.[0]?.text || "";
+      const audio = entry.phonetics?.[0]?.audio || "";
+      const card = document.createElement("div");
+      card.className = "result-card";
+
+      let content = `<strong>${word}</strong>`;
+      if (phonetics) content += ` <small>(${phonetics})</small>`;
+      if (audio) content += ` <audio controls src="${audio}"></audio>`;
+
+      entry.meanings.forEach(meaning => {
+        content += `<div><em><strong>${meaning.partOfSpeech}</strong></em><ul>`;
+        meaning.definitions.slice(0, 2).forEach(def => {
+          content += `<li>${def.definition}`;
+          if (def.example) content += `<br><small><em>Example: ${def.example}</em></small>`;
+          content += `</li>`;
+        });
+        content += `</ul></div>`;
+      });
+
+      card.innerHTML = content;
+      output.appendChild(card);
+    })
+    .catch(() => {
+      loading.classList.add('hidden');
+      output.innerHTML = `<div class="result-card">Error fetching word.</div>`;
+    });
+}
