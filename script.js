@@ -227,15 +227,19 @@ function lookupWord(word) {
       if (phonetics) content += ` <small>(${phonetics})</small>`;
       if (audio) content += ` <audio controls src="${audio}"></audio>`;
 
-      entry.meanings.forEach(meaning => {
-        content += `<div><em><strong>${meaning.partOfSpeech}</strong></em><ul>`;
-        meaning.definitions.slice(0, 2).forEach(def => {
-          content += `<li>${def.definition}`;
-          if (def.example) content += `<br><small><em>Example: ${def.example}</em></small>`;
-          content += `</li>`;
-        });
-        content += `</ul></div>`;
-      });
+entry.meanings.forEach(meaning => {
+  const pos = meaning.partOfSpeech;
+  const icon = getPOSIcon(pos);
+  content += `<div><em><strong><span class="part-icon">${icon}</span>${pos}</strong></em><ul>`;
+  meaning.definitions.slice(0, 2).forEach(def => {
+    const highlighted = def.definition.replace(new RegExp(word, 'gi'), match => `<span class="highlight">${match}</span>`);
+    content += `<li>${highlighted}`;
+    if (def.example) content += `<br><small><em>Example: ${def.example}</em></small>`;
+    content += `</li>`;
+  });
+  content += `</ul></div>`;
+});
+
 
       card.innerHTML = content;
       output.appendChild(card);
@@ -244,4 +248,18 @@ function lookupWord(word) {
       loading.classList.add('hidden');
       output.innerHTML = `<div class="result-card">Error fetching word.</div>`;
     });
+}
+
+function getPOSIcon(pos) {
+  switch (pos) {
+    case 'noun': return '📘';
+    case 'verb': return '🛠';
+    case 'adjective': return '🎨';
+    case 'adverb': return '🏃';
+    case 'interjection': return '❗';
+    case 'pronoun': return '🙋';
+    case 'conjunction': return '🔗';
+    case 'preposition': return '📍';
+    default: return '📄';
+  }
 }
